@@ -1,0 +1,96 @@
+Gustav Stenhag, gusst931
+Ke Wang, kewa203
+
+1. EER & Relational model
+
+See attached .png:s
+
+2. Tables
+
+See tables.sql
+
+3. Procedures #1
+
+See procedures.sql
+
+4. Help functions
+
+See functions.sql
+
+5. Trigger.sql
+
+See trigger
+
+6. Procedures #2
+
+See procedures.sql
+
+7. View
+
+See view.sql
+
+
+8. Answer the following theoretical questions:
+a) How can you protect the credit card information in the database from hackers?
+
+- You can separate the information into two different tables. Maybe store the last 4 digits in the credit card number in another table that is more protected.
+
+b) Give three advantages of using stored procedures in the database (and thereby
+execute them on the server) instead of writing the same functions in the front-
+end of the system (in for example java-script on a web-page)?
+
+- The respond time isn't super affected by the specs of the customers computer.
+- You're not that affected by differences in software versions of JAVA etc. E.g. the adminstrator of the database have more power.
+- It's propbarly easier for hackers to get to the information if caluclations is done in the front end.
+
+
+9. Open two MySQL sessions. We call one of them A and the other one B. Write START TRANSACTION; in both terminals.
+a) In session A, add a new reservation.
+
+-
+
+b) Is this reservation visible in session B? Why? Why not?
+
+- When terminal window #2 is in a transaction, the tables are not updated until you either commit or rollback. Therefore the reservation is not visible in Terminal window B.
+
+c) What happens if you try to modify the reservation from A in B? Explain what happens and why this happens and how this relates to the concept of isolation of transactions.
+
+- The changes doesn't affect the "real" databse before they are commited. Therfore it's not possible to change a transaction in Terminal #1 from window #2.
+
+10. Is your BryanAir implementation safe when handling multiple concurrent transactions? Let two customers try to simultaneously book more seats than what are available on a flight and see what happens. This is tested by executing the testscripts available on the course-page using two different MySQL sessions. Note that you should not use explicit transaction control unless this is your solution on 10c.
+
+a) Did overbooking occur when the scripts were executed? If so, why? If not,
+why not?
+
+Yes, overbooking occured. 
+
+b) Can an overbooking theoretically occur? If an overbooking is possible, in what order must the lines of code in your procedures/functions be executed.
+
+Yes and it did. 
+
+1. Make reservation 1 (25 passengers for example)
+2. Make reservation 2 (25 passengers for example)
+3. Pay reservation 1
+4. Pay reservation 2
+5. The flight will now have -10 available seats, e.g. it's overbooked.
+
+We did however manage to fix the problem by checking the number of available seats two times, both at reservation and at payment, by doing this overbooking can no longer occur.
+
+c) Try to make the theoretical case occur in reality by simulating that multiple sessions call the procedure at the same time. To specify the order in which the lines of code are executed use the MySQL query SELECT sleep(5); which makes the session sleep for 5 seconds. Note that it is not always possible to make the theoretical case occur, if not, motivate why.
+
+We just used the scripts from the website and they made an overbooking. We fixed this (see 10 b) and we do no longer think that it is possible for an overbooking to occur...
+
+d) Modify the testscripts so that overbookings are no longer possible using
+(some of) the commands START TRANSACTION, COMMIT, LOCK TABLES, UNLOCK
+TABLES, ROLLBACK, SAVEPOINT, and SELECT...FOR UPDATE . Motivate why your
+solution solves the issue, and test that this also is the case using the sleep
+implemented in 10c. Note that it is not ok that one of the sessions ends up in a
+deadlock scenario. Also, try to hold locks on the common resources for as
+short time as possible to allow multiple sessions to be active at the same time.
+
+Skipped after instruction from Olaf.
+
+11. Identify one case where a secondary index would be useful. Design the index,
+describe and motivate your design.
+
+One idea would be to implement an index on passport in the Passengers table. By doing this, the personel and government could serach for a specific passenger by passport number and it could save alot of time given that the table is large enough. If we were to implement this we would, have the "Repeating field with pointers" approach, i.e. for every passportnumber we add one pointer for every reservation id. 
